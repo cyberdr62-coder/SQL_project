@@ -4,21 +4,26 @@ on: [push, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Build with Buildozer Docker
-        uses: ArtemSBulgakov/buildozer-action@v1.2.0
-        id: buildozer
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          workdir: .
-          buildozer_version: stable
+          python-version: '3.11'
 
-      - name: Upload APK
+      - name: Build APK with Buildozer Action
+        uses: diground/buildozer-action@v1
+        with:
+          workdir: '.'
+          buildozer_version: 'stable'
+
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ClinicApp-APK
           path: bin/*.apk
+          
